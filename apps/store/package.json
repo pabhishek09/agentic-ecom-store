@@ -4,13 +4,30 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "migrate": "prisma migrate dev --name store",
+    "generate:client": "prisma generate",
+    "seed": "tsx prisma/seed/seed.ts",
+    "reset": "prisma migrate reset",
+    "db:setup": "pnpm run migrate && pnpm run generate:client && pnpm run seed",
+    "db:vis": "prisma studio --config ./prisma.config.ts",
+    "start": "tsx src/server.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "pabhishek.2009@gmail.com",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.0.8",
+    "dotenv": "^17.2.3",
+    "prisma": "^7.2.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "better-sqlite3": "^12.6.0",
+    "express": "^5.2.1"
   }
 }

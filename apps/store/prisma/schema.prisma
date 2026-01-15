@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Product {
+  id               Int      @id @default(autoincrement())
+  book_id          String   @unique
+  name             String
+  author           String
+  language         String
+  category         String
+  keywords         String   // JSON stringified array
+  image_url        String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  prices           Price[]
+}
+
+model Price {
+  id               Int      @id @default(autoincrement())
+  book_id          String   @unique
+  product          Product  @relation(fields: [book_id], references: [book_id], onDelete: Cascade)
+  price_gbp        Float
+  discount_percent Float
+  discounted_price Float
+  stock            Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
