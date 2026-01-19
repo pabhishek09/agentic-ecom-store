@@ -8,8 +8,8 @@
     "generate:client": "prisma generate",
     "seed": "tsx prisma/seed/seed.ts",
     "reset": "prisma migrate reset",
-    "db:setup": "pnpm run migrate && pnpm run generate:client && pnpm run seed",
     "db:vis": "prisma studio --config ./prisma.config.ts",
+    "db:setup": "pnpm run migrate && pnpm run generate:client && pnpm run seed && pnpm run db:vis",
     "start": "tsx src/index.ts"
   },
   "keywords": [],
