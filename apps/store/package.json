@@ -10,7 +10,7 @@
     "reset": "prisma migrate reset",
     "db:setup": "pnpm run migrate && pnpm run generate:client && pnpm run seed",
     "db:vis": "prisma studio --config ./prisma.config.ts",
-    "start": "tsx src/server.ts"
+    "start": "tsx src/index.ts"
   },
   "keywords": [],
   "author": "pabhishek.2009@gmail.com",
@@ -27,6 +27,7 @@
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "@types/express": "^5.0.6",
     "better-sqlite3": "^12.6.0",
     "express": "^5.2.1"
   }
