@@ -7,9 +7,9 @@ import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js'
 import { z } from 'zod'
 import { IncomingMessage } from 'node:http'
 import { InMemoryEventStore } from './inMemoryEventStore.js'
+import { getProducts, getProductsToolDefinition } from './tools/getProducts.js'
 
-// TBD
-// 
+
 const getServer = async () => {
     const server = new McpServer({
         name: 'Store MCP server',
@@ -21,26 +21,13 @@ const getServer = async () => {
         // taskMessageQueue: new InMemoryTaskMessageQueue()
     })
 
-    // Register a simple tool that returns a greeting
+
+    // Register the get products tool
     server.registerTool(
-        'greet',
-        {
-            title: 'Greeting Tool', // Display name for UI
-            description: 'A simple greeting tool',
-            inputSchema: {
-                name: z.string().describe('Name to greet')
-            }
-        },
-        async ({ name }): Promise<CallToolResult> => {
-            return {
-                content: [
-                    {
-                        type: 'text',
-                        text: `Hello, ${name}!`
-                    }
-                ]
-            };
-        }
+        'get_products',
+        getProductsToolDefinition,
+        getProducts
+        
     );
 
     // Register a simple prompt with title
