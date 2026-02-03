@@ -4,7 +4,7 @@
 This is a TypeScript monorepo exploring agentic capabilities for a demo bookstore (local development focused). The architecture consists of two main applications that work together:
 - **Store App** (`apps/store`): Express REST API with Prisma ORM + SQLite for product management
 - **MCP Server** (`apps/mcp`): Model Context Protocol server that exposes store operations as tools for AI agents
-- **Agent App** (planned): Will interact with the MCP server to perform autonomous commerce operations
+- **Web App** (`apps/web`): NextJS web application which creates a mcp client to interact with the mcp server
 
 ## Architecture & Data Flow
 The MCP server acts as a bridge between AI agents and the store backend:

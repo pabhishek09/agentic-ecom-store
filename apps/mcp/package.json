@@ -5,7 +5,8 @@
   "scripts": {
     "start": "tsx src/server.ts",
     "dev": "nodemon --exec tsx src/server.ts",
-    "build": "pkgroll"
+    "build": "pkgroll",
+    "inspect": "npm run build && npx @modelcontextprotocol/inspector dist/server.mjs"
   },
   "keywords": [],
   "author": "",
