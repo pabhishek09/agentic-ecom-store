@@ -1,5 +1,4 @@
 'use client';
-
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { useState, useEffect } from 'react';
@@ -19,7 +18,7 @@ interface Product {
 export default function Page() {
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
-      api: '/api/chat',
+      api: '/api/mcp-chat',
     }),
   });
   const [input, setInput] = useState('');
@@ -28,6 +27,26 @@ export default function Page() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+
+    const mcpConnection = async () => {
+      try {
+        const response = await fetch('/api/client', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ messages: [] }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to connect to MCP');
+        }
+        const data = await response.json();
+        console.log('Connected to MCP successfully', data);
+      } catch (err) {
+        console.error('MCP connection error:', err);
+      }
+    };
+
     const fetchProducts = async () => {
       try {
         const response = await fetch('http://localhost:3000/product');
@@ -44,6 +63,7 @@ export default function Page() {
       }
     };
 
+    // mcpConnection();
     fetchProducts();
   }, []);
 

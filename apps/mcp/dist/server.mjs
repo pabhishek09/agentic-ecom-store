@@ -59,6 +59,48 @@ class InMemoryEventStore {
   }
 }
 
+const PRODUCT_API_URL = "http://localhost:3000/product/";
+async function getProducts() {
+  try {
+    const response = await fetch(PRODUCT_API_URL);
+    if (!response.ok) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error fetching products: ${response.status} ${response.statusText}`
+          }
+        ],
+        isError: true
+      };
+    }
+    const products = await response.json();
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(products, null, 2)
+        }
+      ]
+    };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Error fetching products: ${errorMessage}`
+        }
+      ],
+      isError: true
+    };
+  }
+}
+const getProductsToolDefinition = {
+  title: "Get Products",
+  description: "Fetch all products from the e-commerce store"
+};
+
 const getServer = async () => {
   const server2 = new McpServer({
     name: "Store MCP server",
@@ -70,25 +112,9 @@ const getServer = async () => {
     // taskMessageQueue: new InMemoryTaskMessageQueue()
   });
   server2.registerTool(
-    "greet",
-    {
-      title: "Greeting Tool",
-      // Display name for UI
-      description: "A simple greeting tool",
-      inputSchema: {
-        name: z.string().describe("Name to greet")
-      }
-    },
-    async ({ name }) => {
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Hello, ${name}!`
-          }
-        ]
-      };
-    }
+    "get_products",
+    getProductsToolDefinition,
+    getProducts
   );
   server2.registerPrompt(
     "greeting-template",
@@ -141,7 +167,8 @@ const MCP_PORT = process.env.MCP_PORT ? Number.parseInt(process.env.MCP_PORT, 10
 const app = createMcpExpressApp();
 const server = await getServer();
 const mcpPostHandler = async (req, res) => {
-  const sessionId = req.headers.get("mcp-session-id");
+  console.log("Req headers", req.headers);
+  const sessionId = req.headers["mcp-session-id"];
   if (sessionId) {
     console.log(`Received MCP request for session: ${sessionId}`);
   } else {
@@ -200,7 +227,7 @@ const mcpPostHandler = async (req, res) => {
 };
 app.post("/mcp", mcpPostHandler);
 const mcpGetHandler = async (req, res) => {
-  const sessionId = req.headers.get("mcp-session-id");
+  const sessionId = req.headers["mcp-session-id"];
   if (!sessionId || !transports[sessionId]) {
     res.status(400).send("Invalid or missing session ID");
     return;
